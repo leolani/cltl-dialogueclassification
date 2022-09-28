@@ -9,7 +9,7 @@ with open("VERSION", "r") as fh:
 
 
 setup(
-    name='cltl.mention-detection',
+    name='cltl.dialogue_act_classification',
     version=version,
     package_dir={'': 'src'},
     packages=find_namespace_packages(include=['cltl.*', 'cltl_service.*'], where='src'),
@@ -22,15 +22,8 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     python_requires='>=3.8',
-    install_requires=['cltl.combot'],
+    install_requires=['cltl.combot', "transformers", 'torch'],
     extras_require={
-        "nltk": [
-            "numpy",
-            "nltk"
-        ],
-        "go": [
-            "transformers",
-        ],
         "service": [
             "emissor",
             "flask"

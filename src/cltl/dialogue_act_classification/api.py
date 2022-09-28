@@ -1,7 +1,8 @@
 import abc
 import dataclasses
-from typing import Optional, Any, List, Union
 from enum import Enum, auto
+from typing import Optional, List
+
 
 # (0, 'acknowledge')
 # (1, 'answer')
@@ -28,6 +29,7 @@ class DialogueActType(Enum):
     intent = auto()
     ask_yes_no = auto()
 
+
 @dataclasses.dataclass
 class DialogueAct:
     """
@@ -36,7 +38,6 @@ class DialogueAct:
     type: DialogueActType
     value: str
     confidence: Optional[float]
-
 
 
 class DialogueActClassifier(abc.ABC):
@@ -58,4 +59,3 @@ class DialogueActClassifier(abc.ABC):
             The DialogueAct extracted from the utterance.
         """
         raise NotImplementedError()
-

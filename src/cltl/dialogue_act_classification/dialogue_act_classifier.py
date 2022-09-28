@@ -3,9 +3,9 @@ import time
 from typing import Any, List
 
 from transformers import TextClassificationPipeline, pipeline
-#class transformers.DebertaConfig
-#class transformers.DebertaTokenizer
-#class transformers.DebertaModel
+# class transformers.DebertaConfig
+# class transformers.DebertaTokenizer
+# class transformers.DebertaModel
 from transformers import DebertaTokenizer, DebertaModel
 import torch
 
@@ -13,22 +13,20 @@ from cltl.dialogue_act_classification.api import DialogueActClassifier, Dialogue
 
 logger = logging.getLogger(__name__)
 
-#Local copy of the model
-#_MODEL_NAME = "../models/silicone-deberta-pair"
+# Local copy of the model
+# _MODEL_NAME = "../models/silicone-deberta-pair"
 _MODEL_NAME = "diwank/silicone-deberta-pair"
 _THRESHOLD = 0.5
 
-#
 
 class DialogueActDetector(DialogueActClassifier):
     def __init__(self, model: str):
-       self._dialogue_act_pipeline = pipeline('text-classification', model=model, top_k=3)
-       # self._model = ClassificationModel("deberta_v2", "diwank/silicone-deberta-pair", use_cuda=False)
+        self._dialogue_act_pipeline = pipeline('text-classification', model=model, top_k=3)
+        # self._model = ClassificationModel("deberta_v2", "diwank/silicone-deberta-pair", use_cuda=False)
+        # self._tokenizer = DebertaTokenizer.from_pretrained("diwank/silicone-deberta-pair")
+        # self._model = DebertaModel.from_pretrained("diwank/silicone-deberta-pair")
 
-      # self._tokenizer = DebertaTokenizer.from_pretrained("diwank/silicone-deberta-pair")
-      # self._model = DebertaModel.from_pretrained("diwank/silicone-deberta-pair")
-
-    def _extract_dialogue_act(self, sentences: str) -> List[DialogueAct]:
+    def extract_dialogue_act(self, sentences: str) -> List[DialogueAct]:
         if not sentences:
             return []
 
@@ -38,13 +36,12 @@ class DialogueActDetector(DialogueActClassifier):
         acts = []
 
         response = self._dialogue_act_pipeline(sentences)
-        #response, raw = self._model.predict(sentences)
-        #inputs = self._tokenizer(sentences, return_tensors="pt")
-        #response =self._model(**inputs)
+        # response, raw = self._model.predict(sentences)
+        # inputs = self._tokenizer(sentences, return_tensors="pt")
+        # response =self._model(**inputs)
         self._log_results(acts, response, start)
 
         return acts
-
 
     def _log_results(self, acts, response, start):
         logger.info("got %s from server in %s sec", response, time.time() - start)
@@ -73,10 +70,10 @@ class DialogueActDetector(DialogueActClassifier):
 if __name__ == "__main__":
     sentences = ["I love cats", "Do you love cats?", "Yes, I do", "No, dogs"]
     analyzer = DialogueActDetector(_MODEL_NAME)
-    response = analyzer._extract_dialogue_act(sentences[0])
+    response = analyzer.extract_dialogue_act(sentences[0])
     print(sentences, response)
 
-#Expected output
+# Expected output
 # [{'label': 'LABEL_5', 'score': 0.7644516229629517},
 #  {'label': 'LABEL_8', 'score': 0.9776815176010132},
 #  {'label': 'LABEL_3', 'score': 0.5020651817321777},
