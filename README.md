@@ -31,6 +31,13 @@ Be sure to run in a virtual python environment (e.g. conda, venv, mkvirtualenv, 
     ```bash
     pip install -e .
     ```
+2. Download the fine-tuned RoBERTA model from:
+
+https://drive.google.com/file/d/1-33rHc9O2fM-PPaXu8I_oK5xnFwuMlN7/view?usp=sharing
+
+and put the file "classifier.pt" in the directory:
+
+src/cltl/dialoge_act_classification/models/midas-da-roberta
 
 ### Usage
 
@@ -51,6 +58,16 @@ For using this repository as a package different project and on a different virt
 Then you can import it in a python script as:
 
     import cltl.dialogue_act_classification
+
+To test the classifier run:
+
+```commandline
+python cltl.dialogue_act_classification.silicone_classifier.py
+```
+
+```commandline
+python cltl.dialogue_act_classification.midas_classifier.py
+```
 
 ## References:
 - Chapuis, Emile, Pierre Colombo, Matteo Manica, Matthieu Labeau, and Chloe Clavel. "Hierarchical pre-training for sequence labelling in spoken dialog." arXiv preprint arXiv:2009.11152 (2020).

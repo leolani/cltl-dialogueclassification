@@ -54,17 +54,15 @@ _LABEL2ID ={'open_question_factual': 0,
             'opening': 21,
             'respond_to_apology': 22}
 
-_MODEL = "/Users/piek/Desktop/d-Leolani/cltl-dialogueclassification/models/midas-da-roberta/classifier.pt"
-_DTPATH = "/Users/piek/Desktop/d-Leolani/cltl-dialogueclassification/models/midas-da-roberta/DialogTag.pkl"
+_MODEL = "models/midas-da-roberta/classifier.pt"
 
 class DialogTag:
-    def __init__(self, num_labels=23):
+    def __init__(self, model_path = _MODEL, num_labels=23):
         self._device = torch.device('cpu')
 
         self._tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
         self._model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=num_labels)
-        self._model.load_state_dict(torch.load(_MODEL, map_location=self._device))
-       # self._model = torch.load(_MODEL, map_location=self._device)
+        self._model.load_state_dict(torch.load(model_path, map_location=self._device))
         self._model.to(self._device)
 
         self._label2id = _LABEL2ID
@@ -126,7 +124,7 @@ if __name__ == "__main__":
                  ["I love cats", "Do you love cats?"],
                  ["Do you love cats?", "Yes, I do"],
                  ["Do you love cats?", "No, dogs"]]
-    analyzer = DialogTag()
+    analyzer = DialogTag(model_path=_MODEL)
     for pair in sentences:
         response = analyzer.predict(pair[0], pair[1])
         print(pair, response)
