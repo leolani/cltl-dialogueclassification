@@ -2,9 +2,18 @@
 
 ## Description
 
-This package contains the functionality to detect dialogue acts in texts and annotates the signals with the dialogue act labels and scores.
-The annotations are pushed to the event bus and can be taken up for further processing:
+Detects dialogue acts in texts and annotates the signals with the dialogue act labels and scores.
+The annotations are pushed to the event bus and can be taken up for further processing.
 
+We implemented two dialogue act classifiers:
+
+1) Deberta fine-tuned with the SILICONE data set:
+
+Based on: https://huggingface.co/diwank/silicone-deberta-pair
+
+2) RoBERTa fine-tined with the MIDAS data set:
+
+Based on: https://github.com/DianDYu/MIDAS_dialog_act
 
 
 ## Getting started
@@ -42,18 +51,11 @@ For using this repository as a package different project and on a different virt
 Then you can import it in a python script as:
 
     import cltl.dialogue_act_classification
-    
 
 ## References:
-- https://paperswithcode.com/task/dialogue-act-classification/codeless
-
-- https://github.com/topics/dialogue-act-recognition
-
-- https://github.com/ColingPaper2018/DialogueAct-Tagger
-
-- https://huggingface.co/wwbproj/empathic_conversations_dialog_acts
-
-- https://huggingface.co/diwank/silicone-deberta-pair
+- Chapuis, Emile, Pierre Colombo, Matteo Manica, Matthieu Labeau, and Chloe Clavel. "Hierarchical pre-training for sequence labelling in spoken dialog." arXiv preprint arXiv:2009.11152 (2020).
+- Yu, Dian, and Zhou Yu. "Midas: A dialog act annotation scheme for open domain human machine spoken conversations." arXiv preprint arXiv:1908.10023 (2019).
+- 
 
 ## Integration in the Leolani event-bus
 
