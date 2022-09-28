@@ -1,3 +1,8 @@
 /src/cltl.dialogue_act_classification.egg-info/
 
 .idea
+/src/cltl/dialogue_act_classification/models/midas-da-roberta/classifier.pt
+/src/cltl/dialogue_act_classification/models/midas-da-roberta/DialogTag.pkl
+/src/cltl/dialogue_act_classification/models/midas-da-bert/midas-da-bert.bin
+/src/cltl/dialogue_act_classification/models/midas-da-bert/config.json
+/src/cltl/dialogue_act_classification/models/midas-da-bert/.ipynb_checkpoints/
