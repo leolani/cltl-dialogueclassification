@@ -1,6 +1,7 @@
 import logging
 import time
-from typing import Any, List
+from enum import Enum, auto
+from typing import List
 
 from transformers import pipeline
 
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 _MODEL_NAME = "diwank/silicone-deberta-pair"
 _THRESHOLD = 0.5
 
-class DialogueActType(Enum):
+class DialogueAct(Enum):
     acknowledge = auto()
     answer = auto()
     backchannel = auto()
@@ -34,16 +35,20 @@ class DialogueActDetector(DialogueActClassifier):
       # self._tokenizer = DebertaTokenizer.from_pretrained("diwank/silicone-deberta-pair")
       # self._model = DebertaModel.from_pretrained("diwank/silicone-deberta-pair")
 
-    def _extract_dialogue_act(self, sentences: str) -> str:
+    def _extract_dialogue_act(self, sentences: str) -> List[DialogueAct]:
         if not sentences:
             return []
 
         logger.debug(f"sending utterance to server...")
         start = time.time()
-        response = self._dialogue_act_pipeline(sentences)
+        responses = self._dialogue_act_pipeline(sentences)
+        results = []
+        for response in responses:
+            print(response)
+            dialogueAct = DialogueAct(type="SILICONE", value=response["label"], confidence=response["score"])
+            results.append(dialogueAct)
         self._log_results(response, start)
-
-        return response
+        return results
 
 
     def _log_results(self, response, start):

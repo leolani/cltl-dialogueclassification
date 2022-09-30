@@ -33,7 +33,7 @@ class DialogueActClassifier(abc.ABC):
     Call any of the modality specific emotion extraction function.
     """
 
-    def extract_dialogue_act(self, utterance: str) -> List[DialogueAct]:
+    def _extract_dialogue_act(self, utterance: str) -> List[DialogueAct]:
         """Recognize the dialogue act of a given utterance.
 
         Parameters

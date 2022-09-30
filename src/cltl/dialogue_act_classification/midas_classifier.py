@@ -1,10 +1,12 @@
 import torch
 from transformers import RobertaTokenizer, RobertaForSequenceClassification
-
+from cltl.dialogue_act_classification.api import DialogueActClassifier, DialogueAct
 import numpy as np
 from tqdm import tqdm
-import pickle
+from enum import Enum, auto
+from typing import List
 
+# based on:
 #https://github.com/DianDYu/MIDAS_dialog_act
 
 _LABELS={0: 'open_question_factual',
@@ -56,7 +58,7 @@ _LABEL2ID ={'open_question_factual': 0,
 
 _MODEL = "models/midas-da-roberta/classifier.pt"
 
-class DialogTag:
+class MidasDialogTagger(DialogueActClassifier):
     def __init__(self, model_path = _MODEL, num_labels=23):
         self._device = torch.device('cpu')
 
@@ -67,6 +69,7 @@ class DialogTag:
 
         self._label2id = _LABEL2ID
         self._id2label = _LABELS
+        self._dialog =[""] ### initialise with an empty string to get started
 
     def _tokenize(self, strings):
         return self._tokenizer(strings, padding=True, return_tensors='pt').to(self._device)
@@ -104,27 +107,24 @@ class DialogTag:
 
             print(np.mean(losses))
 
-    def predict(self, turn0, turn1):
+    def _extract_dialogue_act(self, turn1)-> List[DialogueAct]:
+        turn0 = self._dialog[-1]
+        self._dialog.append(turn1)
         string = turn0 + self._tokenizer.sep_token + turn1
-        print(string)
         X = self._tokenize([string])
         y = self._model(**X).logits.cpu().detach().numpy()
         label = self._id2label[np.argmax(y[0])]
         score = y[0][np.argmax(y[0])]
-        response = {'label':label, 'score':score}
+        dialogueAct = DialogueAct(type="MIDAS", value=label, confidence=score)
         ### Trying to normalize the scores, any ideas?
         #max = np.max(y[0])
         #min = np.min(y[0])
         #scaled_scores = np.array([(x-min)/(max-min) for x in y[0]])
-
-        return response
+        return [dialogueAct]
 
 if __name__ == "__main__":
-    sentences = [["", "I love cats",],
-                 ["I love cats", "Do you love cats?"],
-                 ["Do you love cats?", "Yes, I do"],
-                 ["Do you love cats?", "No, dogs"]]
-    analyzer = DialogTag(model_path=_MODEL)
-    for pair in sentences:
-        response = analyzer.predict(pair[0], pair[1])
-        print(pair, response)
+    sentences = ["I love cats", "Do you love cats?","Yes, I do", "Do you love cats?", "No, dogs"]
+    analyzer = MidasDialogTagger(model_path=_MODEL)
+    for sentence in sentences:
+        response = analyzer._extract_dialogue_act(sentence)
+        print(sentence, response)

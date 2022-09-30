@@ -77,5 +77,5 @@ class DialogueActClassificationService:
         utterance= event.payload.signal.text
         acts = self._extractor.extract_dialogue_act(utterance)
 
-        emotion_event = DialogueActClassificationEvent.create_text_mentions(event.payload.signal, acts)
-        self._event_bus.publish(self._output_topic, Event.for_payload(emotion_event))
+        act_event = DialogueActClassificationEvent.create_text_mentions(event.payload.signal, acts)
+        self._event_bus.publish(self._output_topic, Event.for_payload(act_event))
