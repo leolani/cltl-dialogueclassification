@@ -9,7 +9,7 @@ with open("VERSION", "r") as fh:
 
 
 setup(
-    name='cltl.dialogue_act_classification',
+    name='cltl.dialogueclassification',
     version=version,
     package_dir={'': 'src'},
     packages=find_namespace_packages(include=['cltl.*', 'cltl_service.*'], where='src'),
