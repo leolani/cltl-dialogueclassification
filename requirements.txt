@@ -1,7 +1,1 @@
-.[service]
-torch~=1.12.1
-torchvision~=0.13.1
-numpy~=1.22.2
-jsonpickle~=2.2.0
-emissor~=0.0.dev6
-setuptools~=62.3.4
+.[impl, service]
