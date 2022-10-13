@@ -1,13 +1,15 @@
-import torch
-from transformers import RobertaTokenizer, RobertaForSequenceClassification
-from cltl.dialogue_act_classification.api import DialogueActClassifier, DialogueAct
-import numpy as np
-from tqdm import tqdm
-from enum import Enum, auto
 from typing import List
+
+import numpy as np
+import torch
+from tqdm import tqdm
+from transformers import RobertaTokenizer, RobertaForSequenceClassification
+
+from cltl.dialogue_act_classification.api import DialogueActClassifier, DialogueAct
 
 # based on:
 #https://github.com/DianDYu/MIDAS_dialog_act
+
 
 _LABELS={0: 'open_question_factual',
           1: 'pos_answer',
@@ -33,6 +35,7 @@ _LABELS={0: 'open_question_factual',
           21: 'opening',
           22: 'respond_to_apology'}
 
+
 _LABEL2ID ={'open_question_factual': 0,
             'pos_answer': 1,
             'command': 2,
@@ -56,14 +59,13 @@ _LABEL2ID ={'open_question_factual': 0,
             'opening': 21,
             'respond_to_apology': 22}
 
-_MODEL = "models/midas-da-roberta/classifier.pt"
 
 class MidasDialogTagger(DialogueActClassifier):
-    def __init__(self, model_path = _MODEL, num_labels=23):
+    def __init__(self, model_path):
         self._device = torch.device('cpu')
 
         self._tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
-        self._model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=num_labels)
+        self._model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=len(_LABELS))
         self._model.load_state_dict(torch.load(model_path, map_location=self._device))
         self._model.to(self._device)
 
@@ -122,9 +124,10 @@ class MidasDialogTagger(DialogueActClassifier):
         #scaled_scores = np.array([(x-min)/(max-min) for x in y[0]])
         return [dialogueAct]
 
+
 if __name__ == "__main__":
     sentences = ["I love cats", "Do you love cats?","Yes, I do", "Do you love cats?", "No, dogs"]
-    analyzer = MidasDialogTagger(model_path=_MODEL)
+    analyzer = MidasDialogTagger(model_path="resources/midas-da-roberta/classifier.pt")
     for sentence in sentences:
         response = analyzer._extract_dialogue_act(sentence)
         print(sentence, response)
