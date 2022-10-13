@@ -1,6 +1,6 @@
 import logging
 import time
-from enum import Enum, auto
+from enum import Enum
 from typing import List
 
 from transformers import pipeline
@@ -14,59 +14,50 @@ logger = logging.getLogger(__name__)
 _MODEL_NAME = "diwank/silicone-deberta-pair"
 _THRESHOLD = 0.5
 
-class DialogueActType(Enum):
-    acknowledge = auto()
-    answer = auto()
-    backchannel = auto()
-    reply_yes = auto()
-    exclaim = auto()
-    say = auto()
-    reply_no = auto()
-    hold = auto()
-    ask = auto()
-    intent = auto()
-    ask_yes_no = auto()
-    none = auto()
-#['acknowledge','answer', 'backchannel', 'reply_yes', 'exclaim','say', 'reply_no', 'hold', 'ask', 'intent','ask_yes_no']
 
-class DialogueActDetector(DialogueActClassifier):
+class SiliconeDialogueAct(Enum):
+    # KEEP ORDER!
+    acknowledge = 0
+    answer = 1
+    backchannel = 2
+    reply_yes = 3
+    exclaim = 4
+    say = 5
+    reply_no = 6
+    hold = 7
+    ask = 8
+    intent = 9
+    ask_yes_no = 10
+    none = 11
+
+
+class SiliconeDialogueActClassifier(DialogueActClassifier):
     def __init__(self):
        self._dialogue_act_pipeline = pipeline('text-classification', model=_MODEL_NAME)
 
-    def _extract_dialogue_act(self, sentences: str) -> List[DialogueAct]:
+    def extract_dialogue_act(self, sentences: str) -> List[DialogueAct]:
         if not sentences:
             return []
 
-        logger.debug(f"sending utterance to server...")
+        logger.debug(f"Classify dialogue act...")
         start = time.time()
         responses = self._dialogue_act_pipeline(sentences)
-        results = []
-        for response in responses:
-            print(response)
-            response  = self._convert_to_label(response)
-            try:
-                dialogueAct = DialogueAct(type="SILICONE", value=response["label"], confidence=response["score"])
-                results.append(dialogueAct)
-            except:
-                print(response)
-        self._log_results(response, start)
-        return results
+        logger.info("Found %s dialogue acts in %s sec", len(responses), time.time() - start)
+        logger.debug("Dialogue act values: %s", responses)
 
+        return [self._to_dialogue_act(response) for response in responses]
 
-    def _log_results(self, response, start):
-        logger.info("got %s from server in %s sec", response, time.time() - start)
+    def _to_dialogue_act(self, prediction):
+        label_index = int(prediction['label'][-1])
+        label = SiliconeDialogueAct(label_index)._name_
 
-
-    def _convert_to_label (self, prediction):
-         label_index = int(prediction['label'][-1])
-         prediction['label'] = DialogueActType(label_index)._name_
-         return prediction
+        return DialogueAct(type="SILICONE", value=label, confidence=prediction["score"])
 
 
 if __name__ == "__main__":
     sentences = ["I love cats", "Do you love cats?", "Yes, I do", "No, dogs"]
-    analyzer = DialogueActDetector()
-    response = analyzer._extract_dialogue_act(sentences)
+    analyzer = SiliconeDialogueActClassifier()
+    response = analyzer.extract_dialogue_act(sentences)
 
     for sentence, act in zip(sentences, response):
         print(sentence, act)
