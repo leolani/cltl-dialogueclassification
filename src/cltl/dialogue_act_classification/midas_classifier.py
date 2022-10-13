@@ -2,10 +2,16 @@ from typing import List
 
 import numpy as np
 import torch
-from tqdm import tqdm
 from transformers import RobertaTokenizer, RobertaForSequenceClassification
 
 from cltl.dialogue_act_classification.api import DialogueActClassifier, DialogueAct
+
+try:
+    from tqdm import tqdm
+except:
+    # Only needed for training
+    pass
+
 
 # based on:
 #https://github.com/DianDYu/MIDAS_dialog_act
@@ -109,7 +115,10 @@ class MidasDialogTagger(DialogueActClassifier):
 
             print(np.mean(losses))
 
-    def _extract_dialogue_act(self, turn1)-> List[DialogueAct]:
+    def extract_dialogue_act(self, turn1)-> List[DialogueAct]:
+        if not turn1:
+            return []
+
         turn0 = self._dialog[-1]
         self._dialog.append(turn1)
         string = turn0 + self._tokenizer.sep_token + turn1
@@ -129,5 +138,5 @@ if __name__ == "__main__":
     sentences = ["I love cats", "Do you love cats?","Yes, I do", "Do you love cats?", "No, dogs"]
     analyzer = MidasDialogTagger(model_path="resources/midas-da-roberta/classifier.pt")
     for sentence in sentences:
-        response = analyzer._extract_dialogue_act(sentence)
+        response = analyzer.extract_dialogue_act(sentence)
         print(sentence, response)

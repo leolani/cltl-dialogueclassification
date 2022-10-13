@@ -62,7 +62,7 @@ class DialogueActClassificationService:
 
     def _process(self, event: Event[TextSignalEvent]):
         utterance= event.payload.signal.text
-        acts = self._extractor._extract_dialogue_act(utterance)
+        acts = self._extractor.extract_dialogue_act(utterance)
         source = class_source(self._extractor)
 
         act_event = DialogueActClassificationEvent.create_dialogue_act_mentions(event.payload.signal, acts, source)
