@@ -21,4 +21,4 @@ resources/midas-da-roberta/classifier.pt:
 
 
 clean:
-	rm resources/midas-da-roberta/classifier.pt
+	rm -f resources/midas-da-roberta/classifier.pt
