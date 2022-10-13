@@ -21,7 +21,7 @@ class DialogueActClassificationEvent(AnnotationEvent[Annotation[DialogueAct]]):
         image with Face Annotation with value None.
         """
         segment = text_signal.ruler
-        annotations = [Annotation(class_type(DialogueAct), dialogueAct.value, source, timestamp_now())
+        annotations = [Annotation(class_type(DialogueAct), dialogueAct, source, timestamp_now())
                        for dialogueAct in acts]
 
         return Mention(str(uuid.uuid4()), [segment], annotations)

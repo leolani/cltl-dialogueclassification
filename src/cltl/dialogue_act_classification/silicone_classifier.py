@@ -51,7 +51,7 @@ class SiliconeDialogueActClassifier(DialogueActClassifier):
         label_index = int(prediction['label'][-1])
         label = SiliconeDialogueAct(label_index)._name_
 
-        return DialogueAct(type="SILICONE", value=label, confidence=prediction["score"])
+        return DialogueAct(type="SILICONE", value=label, confidence=float(prediction["score"]))
 
 
 if __name__ == "__main__":

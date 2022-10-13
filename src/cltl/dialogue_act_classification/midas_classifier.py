@@ -126,7 +126,7 @@ class MidasDialogTagger(DialogueActClassifier):
         y = self._model(**X).logits.cpu().detach().numpy()
         label = self._id2label[np.argmax(y[0])]
         score = y[0][np.argmax(y[0])]
-        dialogueAct = DialogueAct(type="MIDAS", value=label, confidence=score)
+        dialogueAct = DialogueAct(type="MIDAS", value=label, confidence=float(score))
         ### Trying to normalize the scores, any ideas?
         #max = np.max(y[0])
         #min = np.min(y[0])
