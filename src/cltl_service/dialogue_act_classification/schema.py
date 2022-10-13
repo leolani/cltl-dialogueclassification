@@ -12,7 +12,7 @@ from cltl.dialogue_act_classification.api import DialogueAct
 class DialogueActClassificationEvent(AnnotationEvent[Annotation[DialogueAct]]):
     @classmethod
     def create_dialogue_act_mentions(cls, text_signal: TextSignal, acts: Iterable[DialogueAct], source: str):
-        return cls(class_type(cls), DialogueActClassificationEvent.to_mention(text_signal, acts, source))
+        return cls(class_type(cls), [DialogueActClassificationEvent.to_mention(text_signal, acts, source)])
 
     @staticmethod
     def to_mention(text_signal: TextSignal, acts: Iterable[DialogueAct], source: str):
