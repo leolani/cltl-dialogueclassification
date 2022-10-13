@@ -115,13 +115,13 @@ class MidasDialogTagger(DialogueActClassifier):
 
             print(np.mean(losses))
 
-    def extract_dialogue_act(self, turn1)-> List[DialogueAct]:
-        if not turn1:
+    def extract_dialogue_act(self, utterance: str)-> List[DialogueAct]:
+        if not utterance:
             return []
 
         turn0 = self._dialog[-1]
-        self._dialog.append(turn1)
-        string = turn0 + self._tokenizer.sep_token + turn1
+        self._dialog.append(utterance)
+        string = turn0 + self._tokenizer.sep_token + utterance
         X = self._tokenize([string])
         y = self._model(**X).logits.cpu().detach().numpy()
         label = self._id2label[np.argmax(y[0])]

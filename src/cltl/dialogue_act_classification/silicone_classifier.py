@@ -35,13 +35,13 @@ class SiliconeDialogueActClassifier(DialogueActClassifier):
     def __init__(self):
        self._dialogue_act_pipeline = pipeline('text-classification', model=_MODEL_NAME)
 
-    def extract_dialogue_act(self, sentences: str) -> List[DialogueAct]:
-        if not sentences:
+    def extract_dialogue_act(self, utterance: str) -> List[DialogueAct]:
+        if not utterance:
             return []
 
         logger.debug(f"Classify dialogue act...")
         start = time.time()
-        responses = self._dialogue_act_pipeline(sentences)
+        responses = self._dialogue_act_pipeline(utterance)
         logger.info("Found %s dialogue acts in %s sec", len(responses), time.time() - start)
         logger.debug("Dialogue act values: %s", responses)
 
