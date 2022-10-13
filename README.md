@@ -37,7 +37,7 @@ https://drive.google.com/file/d/1-33rHc9O2fM-PPaXu8I_oK5xnFwuMlN7/view?usp=shari
 
 and put the file "classifier.pt" in the directory:
 
-src/cltl/dialoge_act_classification/models/midas-da-roberta
+resources/midas-da-roberta
 
 ### Usage
 
@@ -62,11 +62,7 @@ Then you can import it in a python script as:
 To test the classifier run:
 
 ```commandline
-python cltl.dialogue_act_classification.silicone_classifier.py
-```
-
-```commandline
-python cltl.dialogue_act_classification.midas_classifier.py
+PYTHONPATH=src python -m unittest
 ```
 
 ## References:
