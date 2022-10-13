@@ -34,5 +34,4 @@ class DialogueActDetectorTest(unittest.TestCase):
     def test_analyze_empty(self):
         acts = self._dialogue_act_classifier.extract_dialogue_act("")
 
-        # TODO
         self.assertEqual(0, len(acts))
