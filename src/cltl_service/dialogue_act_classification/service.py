@@ -49,7 +49,7 @@ class DialogueActClassificationService:
         self._topic_worker = TopicWorker(self._input_topics, self._event_bus, provides=[self._output_topic],
                                          intentions=self._intentions, intention_topic=self._intention_topic,
                                          resource_manager=self._resource_manager, processor=self._process,
-                                         name=self.__class__.__name__)
+                                         buffer_size=4, name=self.__class__.__name__)
         self._topic_worker.start().wait()
 
     def stop(self):
