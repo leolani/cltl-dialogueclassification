@@ -2,8 +2,8 @@ from typing import List
 
 import numpy as np
 import torch
-from transformers import RobertaTokenizer, RobertaForSequenceClassification
-
+from transformers import RobertaTokenizer, RobertaForSequenceClassification, AutoTokenizer
+from transformers import BertTokenizer, BertForSequenceClassification, BertConfig
 from cltl.dialogue_act_classification.api import DialogueActClassifier, DialogueAct
 
 try:
@@ -70,9 +70,15 @@ class MidasDialogTagger(DialogueActClassifier):
     def __init__(self, model_path):
         self._device = torch.device('cpu')
 
-        self._tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
-        self._model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=len(_LABELS))
-        self._model.load_state_dict(torch.load(model_path, map_location=self._device))
+        # Works for XLM Roberta for 100 languages
+        self._tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-base')
+        self._model = RobertaForSequenceClassification.from_pretrained('xlm-roberta-base', num_labels=len(_LABELS))
+
+     #  Works for English Roberta Classifier
+     #   self._tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
+     #   self._model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=len(_LABELS))
+        self._model.load_state_dict(torch.load(model_path, map_location=self._device), strict=False)
+
         self._model.to(self._device)
 
         self._label2id = _LABEL2ID
@@ -136,7 +142,11 @@ class MidasDialogTagger(DialogueActClassifier):
 
 if __name__ == "__main__":
     sentences = ["I love cats", "Do you love cats?","Yes, I do", "Do you love cats?", "No, dogs"]
-    analyzer = MidasDialogTagger(model_path="resources/midas-da-roberta/classifier.pt")
+    sentences = ["Ik ben dol op katten", "Hou jij van katten?","Ja, ik ben dol op ze", "Hou jij van katten?", "Nee, honden"]
+#    analyzer = MidasDialogTagger(model_path="/Users/piek/Desktop/d-Leolani/resources/models/midas-da-roberta/classifier.pt")
+#    analyzer = MidasDialogTagger(model_path="/Users/piek/Desktop/d-Leolani/resources/models/midas-da-bert/midas-da-bert.bin")
+    analyzer = MidasDialogTagger(model_path="/Users/piek/Desktop/d-Leolani/resources/models/midas-da-xlmroberta/pytorch_model.bin")
+
     for sentence in sentences:
         response = analyzer.extract_dialogue_act(sentence)
         print(sentence, response)

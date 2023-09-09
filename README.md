@@ -15,6 +15,9 @@ Based on: https://huggingface.co/diwank/silicone-deberta-pair
 
 Based on: https://github.com/DianDYu/MIDAS_dialog_act
 
+3) XLM-RoBERTa fine-tined with the MIDAS data set:
+
+Based on: https://github.com/DianDYu/MIDAS_dialog_act
 
 ## Getting started
 
@@ -33,11 +36,19 @@ Be sure to run in a virtual python environment (e.g. conda, venv, mkvirtualenv, 
     ```
 2. Download the fine-tuned RoBERTA model from:
 
-https://drive.google.com/file/d/1-33rHc9O2fM-PPaXu8I_oK5xnFwuMlN7/view?usp=sharing
+https://vu.data.surfsara.nl/index.php/s/xLou1DPl739Lbq6
 
 and put the file "classifier.pt" in the directory:
 
 resources/midas-da-roberta
+
+Alternatively, download the XLM-roberta from: 
+
+https://vu.data.surfsara.nl/index.php/s/dw0YCJAVFM870DT
+
+and put the "pytorchmodel.bin" in the directory:
+
+resources/midas-da-xlmroberta
 
 ### Usage
 
