@@ -67,16 +67,18 @@ _LABEL2ID ={'open_question_factual': 0,
 
 
 class MidasDialogTagger(DialogueActClassifier):
-    def __init__(self, model_path):
+    def __init__(self, model_path, XLM):
         self._device = torch.device('cpu')
 
-        # Works for XLM Roberta for 100 languages
-        self._tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-base')
-        self._model = RobertaForSequenceClassification.from_pretrained('xlm-roberta-base', num_labels=len(_LABELS))
+        if XLM:
+            # Works for XLM Roberta for 100 languages
+            self._tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-base')
+            self._model = RobertaForSequenceClassification.from_pretrained('xlm-roberta-base', num_labels=len(_LABELS))
+        else:
+         #  Works for English Roberta Classifier
+            self._tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
+            self._model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=len(_LABELS))
 
-     #  Works for English Roberta Classifier
-     #   self._tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
-     #   self._model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=len(_LABELS))
         self._model.load_state_dict(torch.load(model_path, map_location=self._device), strict=False)
 
         self._model.to(self._device)
