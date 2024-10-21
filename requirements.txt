@@ -2,3 +2,8 @@
 
 # Testing
 parameterized
+torch
+transformers
+numpy
+emissor
+cltl.combot
