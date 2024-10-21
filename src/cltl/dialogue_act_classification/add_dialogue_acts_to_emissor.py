@@ -30,14 +30,15 @@ class DialogueActAnnotator (SignalProcessor):
         if len(utterance)> self._max_text_length:
             utterance=utterance[:self._max_text_length]
         acts = self._classifier.extract_dialogue_act(utterance)
+        #print(acts, utterance)
         mention = DialogueActClassificationEvent.to_mention(textSignal, acts, "MIDAS")
         return mention
 
 
 if __name__ == "__main__":
-    model_path = "/Users/piek/Desktop/d-Leolani/leolani-models/dialogue_models/midas-da-xlmroberta/pytorch_model.bin"
+    model_path = "../../../resources/midas-da-xlmroberta/pytorch_model.bin"
     annotator = DialogueActAnnotator(model_path=model_path, XLM=True)
-    scenario_folder = "/Users/piek/Desktop/d-Leolani/tutorials/test10/leolani-text-to-ekg/app/py-app/storage/emissor"
+    scenario_folder = "../../../data/emissor"
 
     scenario_storage = ScenarioStorage(scenario_folder)
     scenarios = list(scenario_storage.list_scenarios())

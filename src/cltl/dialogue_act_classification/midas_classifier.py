@@ -67,7 +67,7 @@ _LABEL2ID ={'open_question_factual': 0,
 
 
 class MidasDialogTagger(DialogueActClassifier):
-    def __init__(self, model_path, XLM):
+    def __init__(self, model_path, XLM=False):
         self._device = torch.device('cpu')
 
         if XLM:
@@ -143,12 +143,12 @@ class MidasDialogTagger(DialogueActClassifier):
 
 
 if __name__ == "__main__":
-    sentences = ["I love cats", "Do you love cats?","Yes, I do", "Do you love cats?", "No, dogs"]
-    sentences = ["Ik ben dol op katten", "Hou jij van katten?","Ja, ik ben dol op ze", "Hou jij van katten?", "Nee, honden"]
-#    analyzer = MidasDialogTagger(model_path="/Users/piek/Desktop/d-Leolani/resources/models/midas-da-roberta/classifier.pt")
-#    analyzer = MidasDialogTagger(model_path="/Users/piek/Desktop/d-Leolani/resources/models/midas-da-bert/midas-da-bert.bin")
-    analyzer = MidasDialogTagger(model_path="/Users/piek/Desktop/d-Leolani/resources/models/midas-da-xlmroberta/pytorch_model.bin")
+    sentences_en = ["I love cats", "Do you love cats?","Yes, I do", "Do you love cats?", "No, dogs"]
+    sentences_nl = ["Ik ben dol op katten", "Hou jij van katten?","Ja, ik ben dol op ze", "Hou jij van katten?", "Nee, honden"]
+#    analyzer = MidasDialogTagger(model_path="../../../resources/midas-da-roberta/classifier.pt", XLM=False)
+#    analyzer = MidasDialogTagger(model_path="../../../resources/midas-da-bert/midas-da-bert.bin", XLM=False)
+    analyzer = MidasDialogTagger(model_path="../../../resources//midas-da-xlmroberta/pytorch_model.bin", XLM=True)
 
-    for sentence in sentences:
+    for sentence in sentences_en+sentences_nl:
         response = analyzer.extract_dialogue_act(sentence)
         print(sentence, response)
