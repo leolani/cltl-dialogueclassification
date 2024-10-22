@@ -5,7 +5,7 @@
 Detects dialogue acts in texts and annotates the signals with the dialogue act labels and scores.
 The annotations are pushed to the event bus and can be taken up for further processing.
 
-We implemented two dialogue act classifiers:
+We implemented three dialogue act classifiers:
 
 1) Deberta fine-tuned with the SILICONE data set:
 
@@ -15,7 +15,7 @@ Based on: https://huggingface.co/diwank/silicone-deberta-pair
 
 Based on: https://github.com/DianDYu/MIDAS_dialog_act
 
-3) XLM-RoBERTa fine-tined with the MIDAS data set:
+3) XLM-RoBERTa fine-tuned with the MIDAS data set:
 
 Based on: https://github.com/DianDYu/MIDAS_dialog_act
 
@@ -23,7 +23,7 @@ Based on: https://github.com/DianDYu/MIDAS_dialog_act
 
 ### Prerequisites
 
-This repository uses Python >= 3.7
+This repository uses Python >= 3.9
 
 Be sure to run in a virtual python environment (e.g. conda, venv, mkvirtualenv, etc.)
 
