@@ -79,7 +79,7 @@ class MidasDialogTagger(DialogueActClassifier):
             self._tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
             self._model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=len(_LABELS))
 
-        self._model.load_state_dict(torch.load(model_path, map_location=self._device), strict=False)
+        #self._model.load_state_dict(torch.load(model_path, map_location=self._device), strict=False)
 
         self._model.to(self._device)
 
