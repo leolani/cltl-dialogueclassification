@@ -3,7 +3,7 @@ from typing import List
 import numpy as np
 import torch
 from transformers import RobertaTokenizer, RobertaForSequenceClassification, AutoTokenizer
-from transformers import BertTokenizer, BertForSequenceClassification, BertConfig
+#from transformers import BertTokenizer, BertForSequenceClassification, BertConfig
 from cltl.dialogue_act_classification.api import DialogueActClassifier, DialogueAct
 
 try:
@@ -72,12 +72,16 @@ class MidasDialogTagger(DialogueActClassifier):
 
         if XLM:
             # Works for XLM Roberta for 100 languages
-            self._tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-base')
-            self._model = RobertaForSequenceClassification.from_pretrained('xlm-roberta-base', num_labels=len(_LABELS))
+           # self._tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-base')
+           # self._model = RobertaForSequenceClassification.from_pretrained('xlm-roberta-base', num_labels=len(_LABELS))
+            self._tokenizer = AutoTokenizer.from_pretrained(model_path)
+            self._model = RobertaForSequenceClassification.from_pretrained(model_path, num_labels=len(_LABELS))
         else:
          #  Works for English Roberta Classifier
-            self._tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
-            self._model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=len(_LABELS))
+           # self._tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
+           # self._model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=len(_LABELS))
+            self._tokenizer = RobertaTokenizer.from_pretrained(model_path)
+            self._model = RobertaForSequenceClassification.from_pretrained(model_path, num_labels=len(_LABELS))
 
         #self._model.load_state_dict(torch.load(model_path, map_location=self._device), strict=False)
 
@@ -145,9 +149,10 @@ class MidasDialogTagger(DialogueActClassifier):
 if __name__ == "__main__":
     sentences_en = ["I love cats", "Do you love cats?","Yes, I do", "Do you love cats?", "No, dogs"]
     sentences_nl = ["Ik ben dol op katten", "Hou jij van katten?","Ja, ik ben dol op ze", "Hou jij van katten?", "Nee, honden"]
-#    analyzer = MidasDialogTagger(model_path="../../../resources/midas-da-roberta/classifier.pt", XLM=False)
-#    analyzer = MidasDialogTagger(model_path="../../../resources/midas-da-bert/midas-da-bert.bin", XLM=False)
-    analyzer = MidasDialogTagger(model_path="../../../resources//midas-da-xlmroberta/pytorch_model.bin", XLM=True)
+    model_path = "/Users/piek/Desktop/d-Leolani/leolani-models/dialogue_models/midas-da-xlmroberta"
+#   model_path="../../../resources/midas-da-roberta/classifier.pt"
+#   model_path="../../../resources/midas-da-bert/midas-da-bert.bin"
+    analyzer = MidasDialogTagger(model_path=model_path, XLM=True)
 
     for sentence in sentences_en+sentences_nl:
         response = analyzer.extract_dialogue_act(sentence)
