@@ -67,7 +67,7 @@ _LABEL2ID ={'open_question_factual': 0,
 
 
 class MidasDialogTagger(DialogueActClassifier):
-    def __init__(self, model_path, XLM=False):
+    def __init__(self, model_path, XLM=True):
         self._device = torch.device('cpu')
 
         if XLM:
