@@ -20,6 +20,7 @@ class DialogueActClassificationService:
                     config_manager: ConfigurationManager):
         config = config_manager.get_config("cltl.dialogue_act_classification.events")
 
+#@TODO chnge topic_inputs into topic_inpu and upadte a;; config files accordingly
         return cls(config.get("topic_inputs", multi=True), config.get("topic_output"),
                    config.get("topic_intention"), config.get("intentions", multi=True),
                    extractor, event_bus, resource_manager)

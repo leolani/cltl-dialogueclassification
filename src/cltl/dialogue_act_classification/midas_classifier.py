@@ -72,7 +72,7 @@ class MidasDialogTagger(DialogueActClassifier):
 
         if XLM:
             # Works for XLM Roberta for 100 languages
-           # self._tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-base')
+            #self._tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-base')
            # self._model = RobertaForSequenceClassification.from_pretrained('xlm-roberta-base', num_labels=len(_LABELS))
             self._tokenizer = AutoTokenizer.from_pretrained(model_path)
             self._model = RobertaForSequenceClassification.from_pretrained(model_path, num_labels=len(_LABELS))
@@ -151,11 +151,11 @@ class MidasDialogTagger(DialogueActClassifier):
 if __name__ == "__main__":
     sentences_en = ["I love cats", "Do you love cats?","Yes, I do", "Do you love cats?", "No, dogs"]
     sentences_nl = ["Ik ben dol op katten", "Hou jij van katten?","Ja, ik ben dol op ze", "Hou jij van katten?", "Nee, honden"]
-    model_path = "/Users/piek/Desktop/d-Leolani/leolani-models/dialogue_models/midas-da-xlmroberta"
-    model_path = "/Users/piek/Desktop/d-Leolani/tutorials/test19/cltl-text-to-ekg-app/app/py-app/resources/midas-da-xlmroberta"
+   # model_path = "/Users/piek/Desktop/d-Leolani/leolani-models/dialogue_models/midas-da-xlmroberta"
+    model_path = "/Users/piek/Desktop/d-Leolani/tutorials/test22/cltl-text-to-ekg-app/app/py-app/resources/midas-da-xlmroberta"
 #   model_path="../../../resources/midas-da-roberta/classifier.pt"
 #   model_path="../../../resources/midas-da-bert/midas-da-bert.bin"
-    analyzer = MidasDialogTagger(model_path=model_path, XLM=True)
+    analyzer = MidasDialogTagger(model_path=model_path)
 
     for sentence in sentences_en+sentences_nl:
         response = analyzer.extract_dialogue_act(sentence)
