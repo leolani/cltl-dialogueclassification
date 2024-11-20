@@ -52,6 +52,12 @@ resources/midas-da-xlmroberta
 
 ### Usage
 
+To apply this to emissor conversations:
+
+    ```bash
+        python3 examples/annotato_emissor_conversation_with_emotions.py --emissor "../data/emissor"
+    ```
+
 For using this repository as a package different project and on a different virtual environment, you may
 
 - install a published version from PyPI:
