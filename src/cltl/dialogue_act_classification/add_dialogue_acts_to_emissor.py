@@ -1,6 +1,7 @@
 import logging
 import argparse
 import sys
+import os
 from emissor.persistence import ScenarioStorage
 from cltl.dialogue_act_classification.midas_classifier import MidasDialogTagger
 from cltl_service.dialogue_act_classification.schema import DialogueActClassificationEvent
@@ -34,15 +35,43 @@ class DialogueActAnnotator (SignalProcessor):
         mention = DialogueActClassificationEvent.to_mention(textSignal, acts, self._model_name)
         return mention
 
+
+    def remove_annotations(self, signal, annotation_source: [str]):
+        keep_mentions = []
+        for mention in signal.mentions:
+            clear = False
+            for annotation in mention.annotations:
+                if annotation.source and annotation.source in annotation_source:
+                    clear = True
+                    break
+            if not clear:
+                keep_mentions.append(mention)
+        signal.mentions = keep_mentions
+
+    def process_all_scenarios(self, emissor_path:str, scenarios:[]):
+        for scenario in scenarios:
+            if not scenario.startswith("."):
+                scenario_storage = ScenarioStorage(emissor_path)
+                scenario_ctrl = scenario_storage.load_scenario(scenario)
+                signals = scenario_ctrl.get_signals(Modality.TEXT)
+                for signal in signals:
+                    self.remove_annotations(signal, ["MIDAS", "python-source:cltl.dialogue_act_classification.midas_classifier"])
+                    self.process_signal(scenario=scenario_ctrl, signal=signal)
+                #### Save the modified scenario to emissor
+                scenario_storage.save_scenario(scenario_ctrl)
+
 def main(emissor_path:str, scenario:str,  model:str, model_name:str):
     annotator = DialogueActAnnotator(model=model, model_name=model_name, XLM=True)
-    scenario_storage = ScenarioStorage(emissor_path)
-    scenario_ctrl = scenario_storage.load_scenario(scenario)
-    signals = scenario_ctrl.get_signals(Modality.TEXT)
-    for signal in signals:
-        annotator.process_signal(scenario=scenario_ctrl, signal=signal)
-    #### Save the modified scenario to emissor
-    scenario_storage.save_scenario(scenario_ctrl)
+    emissor_path = "/Users/piek/Desktop/t-MA-Combots-2024/assignments/assignment-1/leolani_local/emissor"
+    scenario=""
+    folders = []
+    if not scenario:
+        folders = os.listdir(emissor_path)
+    else:
+        folders=[scenario]
+
+    annotator.process_all_scenarios(emissor_path, folders)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Statistical evaluation emissor scenario')
