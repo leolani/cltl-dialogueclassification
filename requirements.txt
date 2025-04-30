@@ -2,8 +2,8 @@
 
 # Testing
 parameterized
-torch
+torch==2.2.2
 transformers
-numpy
+numpy==1.26.4
 emissor
 cltl.combot

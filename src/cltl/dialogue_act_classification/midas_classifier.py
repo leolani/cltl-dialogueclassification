@@ -151,8 +151,8 @@ class MidasDialogTagger(DialogueActClassifier):
 if __name__ == "__main__":
     sentences_en = ["I love cats", "Do you love cats?","Yes, I do", "Do you love cats?", "No, dogs"]
     sentences_nl = ["Ik ben dol op katten", "Hou jij van katten?","Ja, ik ben dol op ze", "Hou jij van katten?", "Nee, honden"]
-   # model_path = "/Users/piek/Desktop/d-Leolani/leolani-models/dialogue_models/midas-da-xlmroberta"
-    model_path = "/Users/piek/Desktop/d-Leolani/tutorials/test22/cltl-text-to-ekg-app/app/py-app/resources/midas-da-xlmroberta"
+    model_path = "/Users/piek/Desktop/d-Leolani/leolani-models/dialogue_models/midas-da-xlmroberta"
+   # model_path = "/Users/piek/Desktop/d-Leolani/tutorials/test22/cltl-text-to-ekg-app/app/py-app/resources/midas-da-xlmroberta"
 #   model_path="../../../resources/midas-da-roberta/classifier.pt"
 #   model_path="../../../resources/midas-da-bert/midas-da-bert.bin"
     analyzer = MidasDialogTagger(model_path=model_path)

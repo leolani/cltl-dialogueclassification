@@ -2,6 +2,7 @@ import logging
 import argparse
 import sys
 import os
+
 from emissor.persistence import ScenarioStorage
 from cltl.dialogue_act_classification.midas_classifier import MidasDialogTagger
 from cltl_service.dialogue_act_classification.schema import DialogueActClassificationEvent
@@ -51,6 +52,7 @@ class DialogueActAnnotator (SignalProcessor):
     def process_all_scenarios(self, emissor_path:str, scenarios:[]):
         for scenario in scenarios:
             if not scenario.startswith("."):
+                print(emissor_path)
                 scenario_storage = ScenarioStorage(emissor_path)
                 scenario_ctrl = scenario_storage.load_scenario(scenario)
                 signals = scenario_ctrl.get_signals(Modality.TEXT)
@@ -61,8 +63,10 @@ class DialogueActAnnotator (SignalProcessor):
                 scenario_storage.save_scenario(scenario_ctrl)
 
 def main(emissor_path:str, scenario:str,  model:str, model_name:str):
+    model = "/Users/piek/Desktop/d-Leolani/leolani-models/dialogue_models/midas-da-xlmroberta"
     annotator = DialogueActAnnotator(model=model, model_name=model_name, XLM=True)
     emissor_path = "/Users/piek/Desktop/t-MA-Combots-2024/assignments/assignment-1/leolani_local/emissor"
+    emissor_path = "/Users/piek/Desktop/d-Leolani/leolani-health2025.nl/cltl-leolani-app/py-app/storage/emissor"
     scenario=""
     folders = []
     if not scenario:
