@@ -1,21 +1,10 @@
 from typing import List
-
-import numpy as np
-import torch
-from transformers import RobertaTokenizer, RobertaForSequenceClassification, AutoTokenizer
-#from transformers import BertTokenizer, BertForSequenceClassification, BertConfig
+import os
+from transformers import pipeline, RobertaTokenizer, RobertaForSequenceClassification, AutoTokenizer
 from cltl.dialogue_act_classification.api import DialogueActClassifier, DialogueAct
-
-try:
-    from tqdm import tqdm
-except:
-    # Only needed for training
-    pass
-
 
 # based on:
 #https://github.com/DianDYu/MIDAS_dialog_act
-
 
 _LABELS={0: 'open_question_factual',
           1: 'pos_answer',
@@ -68,95 +57,40 @@ _LABEL2ID ={'open_question_factual': 0,
 
 class MidasDialogTagger(DialogueActClassifier):
     def __init__(self, model_path, XLM=True):
-        self._device = torch.device('cpu')
+        abs_model_path = os.path.abspath(os.path.expanduser(model_path))
 
         if XLM:
             # Works for XLM Roberta for 100 languages
-            #self._tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-base')
-           # self._model = RobertaForSequenceClassification.from_pretrained('xlm-roberta-base', num_labels=len(_LABELS))
-            self._tokenizer = AutoTokenizer.from_pretrained(model_path)
-            self._model = RobertaForSequenceClassification.from_pretrained(model_path, num_labels=len(_LABELS))
-            #self.load_state_dict(torch.load(model_path, map_location=self._device))
+            self._tokenizer = AutoTokenizer.from_pretrained(abs_model_path, local_files_only=True,)
+            self._model = RobertaForSequenceClassification.from_pretrained(abs_model_path, local_files_only=True, num_labels=len(_LABELS))
+            self._pipeline = pipeline("text-classification", model=self._model, tokenizer=self._tokenizer)
 
         else:
          #  Works for English Roberta Classifier
-           # self._tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
-           # self._model = RobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=len(_LABELS))
-            self._tokenizer = RobertaTokenizer.from_pretrained(model_path)
-            self._model = RobertaForSequenceClassification.from_pretrained(model_path, num_labels=len(_LABELS))
-
-        #self._model.load_state_dict(torch.load(model_path, map_location=self._device), strict=False)
-
-        self._model.to(self._device)
+            self._tokenizer = RobertaTokenizer.from_pretrained(abs_model_path)
+            self._model = RobertaForSequenceClassification.from_pretrained(abs_model_path, num_labels=len(_LABELS))
+            self._pipeline = pipeline("text-classification", model=self._model, tokenizer=self._tokenizer)
 
         self._label2id = _LABEL2ID
         self._id2label = _LABELS
         self._dialog =[""] ### initialise with an empty string to get started
 
-    def _tokenize(self, strings):
-        return self._tokenizer(strings, padding=True, return_tensors='pt').to(self._device)
-
-    def _encode_labels(self, labels):
-        for label in labels:
-            if label not in self._label2id:
-                self._label2id[label] = len(self._label2id)
-                self._id2label[len(self._id2label)] = label
-
-    # Only needed for training
-    def fit(self, data, epochs=4, batch_size=32, lrate=1e-5):
-        # Preprocess turns and index labels
-        strings = [t0 + self._tokenizer.sep_token + t1 for t0, t1, _ in data]
-        labels = [l for _, _, l in data]
-
-        X = [self._tokenize(strings[i:i + batch_size]) for i in range(0, len(strings), batch_size)]
-        y = [self._encode_labels(labels[i:i + batch_size]) for i in range(0, len(labels), batch_size)]
-
-        # Setup optimizer and objective function
-        optimizer = torch.optim.Adam(self._model.parameters(), lr=lrate)
-        criterion = torch.nn.CrossEntropyLoss()
-
-        for epoch in range(epochs):
-            losses = []
-
-            for X_batch, y_batch in tqdm(zip(X, y)):
-                y_pred = self._model(**X_batch)
-                loss = criterion(y_pred.logits, y_batch)
-                losses.append(loss.item())
-
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
-
-            print(np.mean(losses))
 
     def extract_dialogue_act(self, utterance: str)-> List[DialogueAct]:
         if not utterance:
             return []
-
         turn0 = self._dialog[-1]
         self._dialog.append(utterance)
         string = turn0 + self._tokenizer.sep_token + utterance
-        X = self._tokenize([string])
-        y = self._model(**X).logits.cpu().detach().numpy()
-        label = self._id2label[np.argmax(y[0])]
-        score = y[0][np.argmax(y[0])]
-        dialogueAct = DialogueAct(type="MIDAS", value=label, confidence=float(score))
-        ### Trying to normalize the scores, any ideas?
-        #max = np.max(y[0])
-        #min = np.min(y[0])
-        #scaled_scores = np.array([(x-min)/(max-min) for x in y[0]])
+        result = self._pipeline(string)
+        dialogueAct = DialogueAct(type="MIDAS", value=result[0]['label'], confidence=float(result[0]['score']))
         return [dialogueAct]
-
 
 if __name__ == "__main__":
     sentences_en = ["I love cats", "Do you love cats?","Yes, I do", "Do you love cats?", "No, dogs"]
     sentences_nl = ["Ik ben dol op katten", "Hou jij van katten?","Ja, ik ben dol op ze", "Hou jij van katten?", "Nee, honden"]
     model_path = "/Users/piek/Desktop/d-Leolani/leolani-models/dialogue_models/midas-da-xlmroberta"
-   # model_path = "/Users/piek/Desktop/d-Leolani/tutorials/test22/cltl-text-to-ekg-app/app/py-app/resources/midas-da-xlmroberta"
-#   model_path="../../../resources/midas-da-roberta/classifier.pt"
-#   model_path="../../../resources/midas-da-bert/midas-da-bert.bin"
-    analyzer = MidasDialogTagger(model_path=model_path)
-
+    analyzer = MidasDialogTagger(model_path=model_path, XLM=True)
     for sentence in sentences_en+sentences_nl:
         response = analyzer.extract_dialogue_act(sentence)
         print(sentence, response)
