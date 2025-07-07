@@ -1,8 +1,6 @@
 .[impl, service]
 
-# Testing
 parameterized
-#torch==2.2.2
 transformers
 numpy
 emissor

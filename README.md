@@ -5,17 +5,13 @@
 Detects dialogue acts in texts and annotates the signals with the dialogue act labels and scores.
 The annotations are pushed to the event bus and can be taken up for further processing.
 
-We implemented three dialogue act classifiers:
+We implemented two dialogue act classifiers:
 
 1) Deberta fine-tuned with the SILICONE data set:
 
 Based on: https://huggingface.co/diwank/silicone-deberta-pair
 
-2) RoBERTa fine-tined with the MIDAS data set:
-
-Based on: https://github.com/DianDYu/MIDAS_dialog_act
-
-3) XLM-RoBERTa fine-tuned with the MIDAS data set:
+2XLM-RoBERTa fine-tuned with the MIDAS data set:
 
 Based on: https://github.com/DianDYu/MIDAS_dialog_act
 
@@ -34,28 +30,20 @@ Be sure to run in a virtual python environment (e.g. conda, venv, mkvirtualenv, 
     ```bash
     pip install -e .
     ```
-2. Download the fine-tuned RoBERTA model from:
-
-https://vu.data.surfsara.nl/index.php/s/xLou1DPl739Lbq6
-
-and put the file "classifier.pt" in the directory:
-
-resources/midas-da-roberta
-
-Alternatively, download the XLM-roberta from: 
+2. Download the fine-tuned XLM-roberta from: 
 
 https://vu.data.surfsara.nl/index.php/s/dw0YCJAVFM870DT
 
-and put the "pytorchmodel.bin" in the directory:
+and put the files in the directory:
 
 resources/midas-da-xlmroberta
 
 ### Usage
 
-To apply this to emissor conversations:
+To apply this to conversations stored in EMISSOR format:
 
     ```bash
-        python3 examples/annotato_emissor_conversation_with_emotions.py --emissor "../data/emissor"
+    python3 examples/annotato_emissor_conversation_with_emotions.py --emissor "../data/emissor" --model "../resources/midas-da-xlmroberta" --model-name midas --scenario "14a1c27d-dfd2-465b-9ab2-90e9ea91d214"
     ```
 
 For using this repository as a package different project and on a different virtual environment, you may

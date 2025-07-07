@@ -18,6 +18,7 @@ def main(emissor: str, model_name="MIDAS", scenario="", model_path="../resources
         scenario_ctrl = scenario_storage.load_scenario(scenario)
         signals = scenario_ctrl.get_signals(Modality.TEXT)
         for signal in signals:
+            annotator.remove_annotations(signal,["MIDAS", "python-source:cltl.dialogue_act_classification.midas_classifier"])
             annotator.process_signal(scenario=scenario_ctrl, signal=signal)
         #### Save the modified scenario to emissor
         scenario_storage.save_scenario(scenario_ctrl)
