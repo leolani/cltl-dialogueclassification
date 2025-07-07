@@ -3,6 +3,8 @@ import argparse
 import sys
 import os
 
+from cltl.combot.event import emissor
+
 from emissor.persistence import ScenarioStorage
 from cltl.dialogue_act_classification.midas_classifier import MidasDialogTagger
 from cltl_service.dialogue_act_classification.schema import DialogueActClassificationEvent
@@ -13,12 +15,12 @@ logger = logging.getLogger(__name__)
 
 class DialogueActAnnotator (SignalProcessor):
 
-    def __init__(self, model, model_name, XLM=True):
+    def __init__(self, model_path, model_name, XLM=True):
         """ an evaluator that will use reference metrics to approximate the quality of a conversation, across turns.
         params
         returns: None
         """
-        self._classifier= MidasDialogTagger(model_path=model, XLM=XLM)
+        self._classifier= MidasDialogTagger(model_path=model_path, XLM=XLM)
         self._max_text_length=514
         self._model_name = model_name
 
@@ -63,26 +65,23 @@ class DialogueActAnnotator (SignalProcessor):
                 scenario_storage.save_scenario(scenario_ctrl)
 
 def main(emissor_path:str, scenario:str,  model:str, model_name:str):
-    model = "/Users/piek/Desktop/d-Leolani/leolani-models/dialogue_models/midas-da-xlmroberta"
     annotator = DialogueActAnnotator(model=model, model_name=model_name, XLM=True)
-    emissor_path = "/Users/piek/Desktop/t-MA-Combots-2024/assignments/assignment-1/leolani_local/emissor"
-    emissor_path = "/Users/piek/Desktop/test/cltl-llm-app/py-app/storage/emissor"
-    scenario=""
     folders = []
     if not scenario:
         folders = os.listdir(emissor_path)
     else:
         folders=[scenario]
-
     annotator.process_all_scenarios(emissor_path, folders)
 
 
 if __name__ == '__main__':
+
+   # usage = python add_dialogue_acts_to_emissor.py    --model "../../../resources/midas-da-xlmroberta" --model-name midas --emissor-path "../../../data/emissor"  --scenario "14a1c27d-dfd2-465b-9ab2-90e9ea91d214"
     parser = argparse.ArgumentParser(description='Statistical evaluation emissor scenario')
     parser.add_argument('--emissor-path', type=str, required=False, help="Path to the emissor folder", default='')
     parser.add_argument('--scenario', type=str, required=False, help="Identifier of the scenario", default='')
     parser.add_argument('--model', type=str, required=False, help="Path to the fine-tuned model", default='')
-    parser.add_argument('--model_name', type=str, required=False, help="Name of the model for the annoation", default='MIDAS')
+    parser.add_argument('--model_name', type=str, required=False, help="Name of the model to label the provenance of the annotation in emissor", default='MIDAS')
 
     args, _ = parser.parse_known_args()
     print('Input arguments', sys.argv)

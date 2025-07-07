@@ -1,17 +1,4 @@
 {
-  "id": "14a1c27d-dfd2-465b-9ab2-90e9ea91d214",
-  "@type": "Scenario",
-  "context": {
-    "agent": "Agent(name='Leolani', uri='http://cltl.nl/leolani/world/leolani')",
-    "speaker": {
-      "uri": "http://cltl.nl/leolani/world/wilbur",
-      "name": "Wilbur"
-    },
-    "_py_type": "emissor.representation.util-JSON"
-  },
-  "signals": {
-    "text": "./text.json"
-  },
   "@context": {
     "Scenario": "https://emissor.org#Scenario",
     "id": "@id",
@@ -19,11 +6,9 @@
     "signals": "https://emissor.org#signals",
     "ruler": "https://emissor.org#ruler"
   },
+  "@type": "Scenario",
+  "id": "14a1c27d-dfd2-465b-9ab2-90e9ea91d214",
   "ruler": {
-    "end": 1728549079804,
-    "container_id": "14a1c27d-dfd2-465b-9ab2-90e9ea91d214",
-    "@type": "TemporalRuler",
-    "start": 1728548848432,
     "@context": {
       "TemporalRuler": "https://emissor.org#TemporalRuler",
       "id": "@id",
@@ -34,6 +19,21 @@
         "@type": "@id"
       }
     },
+    "@type": "TemporalRuler",
+    "container_id": "14a1c27d-dfd2-465b-9ab2-90e9ea91d214",
+    "start": 1728548848432,
+    "end": 1728549079804,
     "_py_type": "emissor.representation.container-TemporalRuler"
+  },
+  "context": {
+    "agent": "Agent(name='Leolani', uri='http://cltl.nl/leolani/world/leolani')",
+    "speaker": {
+      "uri": "http://cltl.nl/leolani/world/wilbur",
+      "name": "Wilbur"
+    },
+    "_py_type": "emissor.representation.util-JSON"
+  },
+  "signals": {
+    "text": "./text.json"
   }
 }
