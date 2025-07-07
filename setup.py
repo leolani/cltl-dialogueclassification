@@ -26,7 +26,6 @@ setup(
     extras_require={
         "impl": [
             "transformers",
-            'torch',
             'numpy'
         ],
         "service": [
