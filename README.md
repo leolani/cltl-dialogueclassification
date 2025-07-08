@@ -73,7 +73,7 @@ PYTHONPATH=src python -m unittest
 ## References:
 - Chapuis, Emile, Pierre Colombo, Matteo Manica, Matthieu Labeau, and Chloe Clavel. "Hierarchical pre-training for sequence labelling in spoken dialog." arXiv preprint arXiv:2009.11152 (2020).
 - Yu, Dian, and Zhou Yu. "Midas: A dialog act annotation scheme for open domain human machine spoken conversations." arXiv preprint arXiv:1908.10023 (2019).
-- 
+- Santamaría, Selene Báez, Thomas Baier, Taewoon Kim, Lea Krause, Jaap Kruijt, and Piek Vossen. "EMISSOR: A platform for capturing multimodal interactions as Episodic Memories and Interpretations with Situated Scenario-based Ontological References." In Proceedings of the 1st Workshop on Multimodal Semantic Representations (MMSR), pp. 56-77. 2021.
 
 ## Integration in the Leolani event-bus
 

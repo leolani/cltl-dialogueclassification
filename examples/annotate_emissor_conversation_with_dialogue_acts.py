@@ -5,7 +5,7 @@ from cltl.dialogue_act_classification.add_dialogue_acts_to_emissor import Dialog
 import os
 
 def main(emissor: str, model_name="MIDAS", scenario="", model_path="../resources/midas-da-xlmroberta"):
-    annotator = DialogueActAnnotator(model_path=model_path, XLM=True, model_name=model_name)
+    annotator = DialogueActAnnotator(model_path=model_path, model_name=model_name)
     scenario_storage = ScenarioStorage(emissor)
     scenarios = []
     if scenario:

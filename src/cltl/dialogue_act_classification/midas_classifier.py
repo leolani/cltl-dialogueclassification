@@ -1,6 +1,6 @@
 from typing import List
 import os
-from transformers import pipeline, RobertaTokenizer, RobertaForSequenceClassification, AutoTokenizer
+from transformers import pipeline, RobertaForSequenceClassification, AutoTokenizer
 from cltl.dialogue_act_classification.api import DialogueActClassifier, DialogueAct
 
 # based on:
@@ -56,21 +56,11 @@ _LABEL2ID ={'open_question_factual': 0,
 
 
 class MidasDialogTagger(DialogueActClassifier):
-    def __init__(self, model_path, XLM=True):
+    def __init__(self, model_path):
         abs_model_path = os.path.abspath(os.path.expanduser(model_path))
-
-        if XLM:
-            # Works for XLM Roberta for 100 languages
-            self._tokenizer = AutoTokenizer.from_pretrained(abs_model_path, local_files_only=True,)
-            self._model = RobertaForSequenceClassification.from_pretrained(abs_model_path, local_files_only=True, num_labels=len(_LABELS))
-            self._pipeline = pipeline("text-classification", model=self._model, tokenizer=self._tokenizer)
-
-        else:
-         #  Works for English Roberta Classifier
-            self._tokenizer = RobertaTokenizer.from_pretrained(abs_model_path)
-            self._model = RobertaForSequenceClassification.from_pretrained(abs_model_path, num_labels=len(_LABELS))
-            self._pipeline = pipeline("text-classification", model=self._model, tokenizer=self._tokenizer)
-
+        self._tokenizer = AutoTokenizer.from_pretrained(abs_model_path, local_files_only=True)
+        self._model = RobertaForSequenceClassification.from_pretrained(abs_model_path, local_files_only=True, use_safetensors=True, num_labels=len(_LABELS))
+        self._pipeline = pipeline("text-classification", model=self._model, tokenizer=self._tokenizer)
         self._label2id = _LABEL2ID
         self._id2label = _LABELS
         self._dialog =[""] ### initialise with an empty string to get started
@@ -90,7 +80,7 @@ if __name__ == "__main__":
     sentences_en = ["I love cats", "Do you love cats?","Yes, I do", "Do you love cats?", "No, dogs"]
     sentences_nl = ["Ik ben dol op katten", "Hou jij van katten?","Ja, ik ben dol op ze", "Hou jij van katten?", "Nee, honden"]
     model_path = "/Users/piek/Desktop/d-Leolani/leolani-models/dialogue_models/midas-da-xlmroberta"
-    analyzer = MidasDialogTagger(model_path=model_path, XLM=True)
+    analyzer = MidasDialogTagger(model_path=model_path)
     for sentence in sentences_en+sentences_nl:
         response = analyzer.extract_dialogue_act(sentence)
         print(sentence, response)

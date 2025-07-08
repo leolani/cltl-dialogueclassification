@@ -5,3 +5,4 @@ transformers
 numpy
 emissor
 cltl.combot
+#torch==2.2.2

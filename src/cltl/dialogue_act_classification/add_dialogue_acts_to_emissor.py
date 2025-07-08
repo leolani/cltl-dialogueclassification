@@ -10,12 +10,12 @@ logger = logging.getLogger(__name__)
 
 class DialogueActAnnotator (SignalProcessor):
 
-    def __init__(self, model_path, model_name, XLM=True):
+    def __init__(self, model_path, model_name):
         """ an evaluator that will use reference metrics to approximate the quality of a conversation, across turns.
         params
         returns: None
         """
-        self._classifier= MidasDialogTagger(model_path=model_path, XLM=XLM)
+        self._classifier= MidasDialogTagger(model_path=model_path)
         self._max_text_length=514
         self._model_name = model_name
 
