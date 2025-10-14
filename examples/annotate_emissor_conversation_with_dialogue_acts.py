@@ -39,4 +39,8 @@ if __name__ == '__main__':
     if not os.path.exists(args.emissor):
         raise ValueError("The folder %s does not exists. The --emissor argument should point to a folder that contains the scenarios to annotate", args.emissor)
 
-    main(args.emissor.strip())
+
+    main(emissor=args.emissor,
+         scenario=args.scenario,
+         model_path=args.model_path,
+         model_name = args.model_name)
