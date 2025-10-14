@@ -57,6 +57,7 @@ _LABEL2ID ={'open_question_factual': 0,
 
 class MidasDialogTagger(DialogueActClassifier):
     def __init__(self, model_path):
+        print("Loading MIDAS model...", model_path)
         abs_model_path = os.path.abspath(os.path.expanduser(model_path))
         self._tokenizer = AutoTokenizer.from_pretrained(abs_model_path, local_files_only=True)
         #self._model = RobertaForSequenceClassification.from_pretrained(abs_model_path, local_files_only=True, use_safetensors=True, num_labels=len(_LABELS))
