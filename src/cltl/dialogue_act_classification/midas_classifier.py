@@ -59,8 +59,9 @@ class MidasDialogTagger(DialogueActClassifier):
     def __init__(self, model_path):
         abs_model_path = os.path.abspath(os.path.expanduser(model_path))
         self._tokenizer = AutoTokenizer.from_pretrained(abs_model_path, local_files_only=True)
-        self._model = RobertaForSequenceClassification.from_pretrained(abs_model_path, local_files_only=True, use_safetensors=True, num_labels=len(_LABELS))
-        self._pipeline = pipeline("text-classification", model=self._model, tokenizer=self._tokenizer)
+        #self._model = RobertaForSequenceClassification.from_pretrained(abs_model_path, local_files_only=True, use_safetensors=True, num_labels=len(_LABELS))
+        #self._pipeline = pipeline("text-classification", model=self._model, tokenizer=self._tokenizer)
+        self._pipeline = pipeline("text-classification", model=model_path)
         self._label2id = _LABEL2ID
         self._id2label = _LABELS
         self._dialog =[""] ### initialise with an empty string to get started

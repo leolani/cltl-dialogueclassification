@@ -27,7 +27,7 @@ def main(emissor: str, model_name="MIDAS", scenario="", model_path="../resources
 
 if __name__ == '__main__':
     default = "../data/emissor"
-    model="../resources/midas-da-xlmroberta/pytorch_model.bin"
+    model="CLTL/midas-da-xlmroberta"
     parser = argparse.ArgumentParser(description='Annotate emissor with emotions')
     parser.add_argument('--emissor', type=str, required=True, help="Path to the folder with emissor scenarios", default=default)
     parser.add_argument('--scenario', type=str, required=False, help="Identifier of the scenario. If left out all subfolders will be considered as scenarios to process", default='')
