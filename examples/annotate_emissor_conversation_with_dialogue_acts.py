@@ -4,7 +4,9 @@ from emissor.representation.scenario import Modality, Signal
 from cltl.dialogue_act_classification.add_dialogue_acts_to_emissor import DialogueActAnnotator
 import os
 
-def main(emissor: str, model_name="MIDAS", scenario="", model_path="../resources/midas-da-xlmroberta"):
+def main(emissor: str, model_name="", scenario="", model_path=""):
+    print("Processing emissor", emissor)
+    print("Using model", model_path)
     annotator = DialogueActAnnotator(model_path=model_path, model_name=model_name)
     scenario_storage = ScenarioStorage(emissor)
     scenarios = []
@@ -18,7 +20,7 @@ def main(emissor: str, model_name="MIDAS", scenario="", model_path="../resources
         scenario_ctrl = scenario_storage.load_scenario(scenario)
         signals = scenario_ctrl.get_signals(Modality.TEXT)
         for signal in signals:
-            annotator.remove_annotations(signal,["MIDAS", "python-source:cltl.dialogue_act_classification.midas_classifier"])
+            annotator.remove_annotations(signal,[model_name, "python-source:cltl.dialogue_act_classification.midas_classifier"])
             annotator.process_signal(scenario=scenario_ctrl, signal=signal)
         #### Save the modified scenario to emissor
         scenario_storage.save_scenario(scenario_ctrl)
@@ -31,7 +33,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Annotate emissor with emotions')
     parser.add_argument('--emissor', type=str, required=True, help="Path to the folder with emissor scenarios", default=default)
     parser.add_argument('--scenario', type=str, required=False, help="Identifier of the scenario. If left out all subfolders will be considered as scenarios to process", default='')
-    parser.add_argument('--model_path', type=str, required=True, help="Path to the MIDAS DA XLMRoBERTa model", default=model)
+    parser.add_argument('--model_path', type=str, required=False, help="Path to the MIDAS DA XLMRoBERTa model", default=model)
     parser.add_argument('--model_name', type=str, required=False, help="Name of the model to label the provenance of the annotation in emissor", default='MIDAS')
 
     args, _ = parser.parse_known_args()
@@ -39,8 +41,8 @@ if __name__ == '__main__':
     if not os.path.exists(args.emissor):
         raise ValueError("The folder %s does not exists. The --emissor argument should point to a folder that contains the scenarios to annotate", args.emissor)
 
-
+    print("Arguments: ", args)
     main(emissor=args.emissor,
          scenario=args.scenario,
-         model_path=args.model_path,
+         model_path=model,
          model_name = args.model_name)
