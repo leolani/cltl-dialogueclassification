@@ -85,7 +85,7 @@ class MidasDialogTagger(DialogueActClassifier):
         #  ('do you want to hear some fun facts about cats instead', 'yes', 'command')]
         ## strings = [t0 + self._tokenizer.sep_token + t1 for t0, t1, _ in data]
         string = turn0 + self._tokenizer.sep_token + utterance
-        result = self._pipeline(utterance)
+        result = self._pipeline(string)
         top_result = result[0]
         dialogueAct = DialogueAct(type="MIDAS", value=top_result[0]['label'], confidence=float(top_result[0]['score']))
         return [dialogueAct]
